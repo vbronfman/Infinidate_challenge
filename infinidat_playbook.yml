@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  #become: yes
+  name: "Install and Configure Flusk app into docker image and start containter"
+  roles:
+  - docker-role 
