@@ -1,0 +1,83 @@
+---
+#- hosts: localhost
+  #gather_facts: false
+  # vars:
+    # imagename: "infinidat_challenge"
+    # containername : "docker-test"  
+  
+#  tasks:
+    - name: site | hello world
+      shell: echo "Hi! Ansible is working"
+    
+   # - debug: msg="Inside role1"
+  
+# 
+    # - name: Remove Flask app  image
+    ##  docker_image:
+      # community.docker.docker_image:
+        # name: infinidat_challenge
+        # tag: latest
+        # state: absent 
+# 
+    # - name: Build image
+      # docker_image:
+        # name: infinidat_challenge
+        # tag: latest
+        # path: ./composetest
+        # docker_host: tcp://host.docker.internal:2375 #unix://var/run/docker.sock
+        # nocache: yes
+        # state: present 
+
+    - name: Build image with build args
+      community.docker.docker_image:
+        #name: infinidat_challenge
+        name: '{{imagename}}'
+
+        build:
+          path: '{{ role_path }}/files' 
+          nocache: yes
+          # args:
+            # log_volume: /var/log/myapp
+            # listen_port: 8080
+        source: build
+        force_source: yes
+        
+
+    # - name: Create container #-p "5003:5000" --rm infinidat_challenge
+      ##docker_container:
+      # community.docker.docker_container:
+        # name: docker-test 
+        # image: infinidat_challenge:latest #should be variable
+        # ports:
+          # - "5003:5000" #should be variable
+        # state: started 
+        # recreate: yes 
+        ##auto_remove: yes
+        # ignore_image: no
+        ##command: 
+    - name: Remove container 
+      community.docker.docker_container:
+        #debug: name
+        #name:  docker-test 
+        name: '{{ containername }}'
+        state: absent
+    
+    - name: Create container #-p "5003:5000" --rm infinidat_challenge
+    #docker_container:
+      community.docker.docker_container:
+        #name: docker-test 
+        name: '{{containername}}'
+        #image: infinidat_challenge #should be variable
+        image: '{{imagename}}' 
+        
+        ports:
+          - "5003:5000" #should be variable
+        state: started 
+        recreate: yes 
+        # auto_remove: yes
+        ignore_image: no        
+
+    # - name: Run command within container
+      # delegate_to: docker-test # runs within container docker-test
+      # raw: apt -y update && apt install -y python-minimal # executes command within container
+      

@@ -1,0 +1,3 @@
+---
+# tasks file for ~/.ansible/roles/docker-role
+- import_tasks: playbook.yml

@@ -1,0 +1,5 @@
+---
+# defaults file for ~/.ansible/roles/docker-role
+imagename: "infinidat_challenge"
+containername : "docker-test"  
+# 
